@@ -1,0 +1,33 @@
+{
+  "name": "whatsapp-ai-bot",
+  "version": "1.0.0",
+  "description": "Bot de WhatsApp con IA (Groq) para atención al cliente de negocios",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/index.js",
+    "build": "tsc",
+    "clean": "rimraf dist auth_info_baileys bot.db"
+  },
+  "keywords": ["whatsapp", "bot", "ai", "groq", "llama", "typescript", "baileys"],
+  "author": "Nix0010",
+  "license": "MIT",
+  "dependencies": {
+    "@whiskeysockets/baileys": "^6.7.18",
+    "better-sqlite3": "^11.9.1",
+    "chalk": "^5.4.1",
+    "dotenv": "^16.5.0",
+    "drizzle-orm": "^0.43.1",
+    "groq-sdk": "^0.15.0",
+    "pino-pretty": "^13.0.0",
+    "qrcode-terminal": "^0.12.0"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.12",
+    "@types/node": "^22.15.3",
+    "drizzle-kit": "^0.31.1",
+    "nodemon": "^3.1.10",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.3"
+  }
+}
