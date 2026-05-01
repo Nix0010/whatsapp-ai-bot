@@ -8,14 +8,12 @@ import {
 
 // Comandos especiales
 const COMMANDS: Record<string, string> = {
-  hola: "👋 ¡Hola! Soy el asistente virtual. ¿En qué puedo ayudarte hoy?",
-  inicio: "👋 ¡Hola! Soy el asistente virtual. ¿En qué puedo ayudarte hoy?",
-  ayuda:
-    "ℹ️ Puedo ayudarte con información sobre nuestros servicios, horarios, precios y más. Solo escríbeme tu pregunta.",
-  humano:
-    "👨‍💼 Entendido. En breve un integrante de nuestro equipo se pondrá en contacto contigo. ¡Gracias por tu paciencia!",
-  reset:
-    "🔄 Conversación reiniciada. ¿En qué puedo ayudarte?",
+  hola: "¡Hola! 👋 Bienvenido a NetFlow 🚀\n\nCreamos páginas web modernas, software a medida, automatizaciones inteligentes e integración con IA para ayudar a negocios a vender más, ahorrar tiempo y mejorar su atención al cliente.\n\nCuéntame, ¿qué estás buscando para tu negocio?",
+  inicio: "¡Hola! 👋 Bienvenido a NetFlow 🚀\n\nCreamos páginas web modernas, software a medida, automatizaciones inteligentes e integración con IA para ayudar a negocios a vender más, ahorrar tiempo y mejorar su atención al cliente.\n\nCuéntame, ¿qué estás buscando para tu negocio?",
+  precio: "¡Claro! 💻 Nuestros precios dependen del tipo de proyecto, funciones y nivel de personalización.\n\nPara darte una cotización más exacta, cuéntame:\n1. ¿Qué tipo de negocio tienes?\n2. ¿Necesitas página web, chatbot, automatización o software?\n3. ¿Qué objetivo quieres lograr?",
+  precios: "¡Claro! 💻 Nuestros precios dependen del tipo de proyecto, funciones y nivel de personalización.\n\nPara darte una cotización más exacta, cuéntame:\n1. ¿Qué tipo de negocio tienes?\n2. ¿Necesitas página web, chatbot, automatización o software?\n3. ¿Qué objetivo quieres lograr?",
+  humano: "👨‍💼 Entendido. En breve un especialista de NetFlow se pondrá en contacto contigo. ¡Gracias por tu paciencia!",
+  reset: "🔄 Conversación reiniciada. ¿En qué puedo ayudarte?",
 };
 
 let messageCount = 0;
