@@ -1,0 +1,21 @@
+version: "3.8"
+
+services:
+  whatsapp-bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: whatsapp_ai_bot
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      # Persistencia para no tener que escanear el QR cada vez que se reinicia
+      - ./auth_info_baileys:/app/auth_info_baileys
+      # Persistencia para la base de datos (historial y registros)
+      - ./bot.db:/app/bot.db
+      - ./bot.db-shm:/app/bot.db-shm
+      - ./bot.db-wal:/app/bot.db-wal
+    environment:
+      - NODE_ENV=production
+      - TZ=America/Bogota # Ajusta según tu zona horaria

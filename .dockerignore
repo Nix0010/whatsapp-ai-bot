@@ -1,0 +1,8 @@
+node_modules
+dist
+.env
+auth_info_baileys
+bot.db*
+.git
+.gitignore
+README.md

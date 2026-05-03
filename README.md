@@ -1,149 +1,122 @@
 <div align="center">
 
-# 🤖 WhatsApp AI Bot
+# 🤖 WhatsApp AI Bot Enterprise
 
-**Bot de WhatsApp con Inteligencia Artificial para atención al cliente**
+**Asistente Virtual Inteligente para Negocios impulsado por LLaMA 3.3**
 
 [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
 [![Groq](https://img.shields.io/badge/Groq_AI-F55036?style=for-the-badge&logo=groq&logoColor=white)](https://groq.com/)
 [![SQLite](https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)](https://sqlite.org/)
+[![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
 
-*Conecta cualquier negocio a WhatsApp con respuestas automáticas impulsadas por LLaMA 3.3*
+*Conecta tu negocio a WhatsApp con respuestas automáticas, concurrentes y de baja latencia impulsadas por inteligencia artificial avanzada.*
 
 </div>
 
 ---
 
-## ¿Qué hace?
+## 🌟 Características Principales
 
-Un bot de WhatsApp completamente funcional que responde mensajes de clientes usando IA (Groq + LLaMA 3.3). Se configura en minutos para cualquier tipo de negocio: barberías, restaurantes, consultorios médicos, tiendas online, etc.
-
-- 🧠 **Respuestas inteligentes** con contexto del negocio via Groq API (LLaMA 3.3 70B)
-- 💬 **Memoria de conversación** — recuerda el historial de cada usuario (últimas 10 respuestas, 24h)
-- ⚡ **Comandos rápidos** — `hola`, `ayuda`, `humano`, `reset`
-- 🔄 **Reconexión automática** si se cae la conexión
-- 🗄️ **Base de datos SQLite** para historial y registro de usuarios
-- 📦 **Cero infraestructura** — corre en cualquier máquina con Node.js
+- 🧠 **Respuestas Contextuales**: Integra LLaMA 3.3 (70B) vía Groq API para conversaciones naturales.
+- ⚡ **Alta Concurrencia**: Arquitectura no bloqueante (`Promise.allSettled`) para procesamiento rápido de múltiples clientes.
+- 💬 **Memoria Persistente**: Historial de conversación respaldado en SQLite (Drizzle ORM).
+- 🔄 **Reconexión Automática**: Manejo resiliente de caídas de red y errores de sesión con Baileys.
+- 🐳 **Docker-Ready**: Despliegue en producción con un solo comando.
 
 ---
 
-## Stack Técnico
+## 📐 Arquitectura del Sistema
 
-| Capa | Tecnología |
-|---|---|
-| Runtime | Node.js + TypeScript |
-| WhatsApp | Baileys (open source, sin costo) |
-| IA | Groq API — LLaMA 3.3 70B Versatile |
-| Base de datos | SQLite + Drizzle ORM |
-| Configuración | dotenv |
+```mermaid
+graph TD
+    Client[Cliente de WhatsApp] <-->|Mensajes E2E| Baileys[Baileys Engine]
+    Baileys <-->|Eventos| Handler[Message Handler]
+    
+    subgraph Lógica de Negocio
+        Handler <-->|CRUD Historial| DB[(SQLite Database)]
+        Handler <-->|Prompt + Contexto| Groq[Groq API / LLaMA 3.3]
+    end
+    
+    DB -.-> Drizzle[Drizzle ORM]
+```
 
 ---
 
-## Instalación y Uso
+## 🛠️ Stack Tecnológico
 
-### 1. Clonar el repositorio
+| Capa | Tecnología | Función |
+|---|---|---|
+| **Runtime** | Node.js + TypeScript | Entorno de ejecución tipado y seguro |
+| **Integración** | Baileys | API no oficial de WhatsApp Web (Sockets) |
+| **Inteligencia** | Groq API | Motor de inferencia ultrarrápido para LLMs |
+| **Persistencia** | SQLite + Drizzle ORM | Almacenamiento local ultraligero e indexado |
+| **Despliegue** | Docker & Docker Compose | Contenedorización para producción 24/7 |
 
+---
+
+## 🚀 Instalación Local (Desarrollo)
+
+### 1. Requisitos Previos
+- Node.js >= 18
+- TypeScript
+- Git
+
+### 2. Configuración
 ```bash
 git clone https://github.com/Nix0010/whatsapp-ai-bot.git
 cd whatsapp-ai-bot
-```
-
-### 2. Instalar dependencias
-
-```bash
 npm install
-```
-
-### 3. Configurar variables de entorno
-
-```bash
 cp .env.example .env
 ```
 
-Edita el `.env` con los datos de tu negocio:
+Edita el `.env` con los datos de tu negocio y tu `GROQ_API_KEY`.
 
-```env
-# API Key de Groq (gratis en console.groq.com)
-GROQ_API_KEY=tu_api_key_aqui
-
-# Datos de tu negocio
-BUSINESS_NAME=Barbería El Corte Perfecto
-BUSINESS_TYPE=barbería
-BUSINESS_HOURS=Lunes a Sábado 9am-7pm
-BUSINESS_SERVICES=Corte de cabello, barba, afeitado clásico, cejas
-BUSINESS_PHONE=+57 300 123 4567
-BUSINESS_ADDRESS=Calle 45 #12-30, Bogotá
-```
-
-### 4. Iniciar el bot
-
+### 3. Iniciar el bot
 ```bash
 npm run dev
 ```
-
-Escanea el QR con WhatsApp → **Dispositivos vinculados → Vincular dispositivo**
-
-¡Listo! El bot empezará a responder mensajes automáticamente.
+Escanea el código QR que aparecerá en tu terminal desde WhatsApp (Dispositivos vinculados).
 
 ---
 
-## Comandos disponibles
+## 🐳 Despliegue en Producción (Docker)
 
-| Comando | Respuesta |
+Para ejecutar el bot 24/7 en un VPS (AWS, DigitalOcean, Hetzner), la mejor opción es usar Docker. Esto garantiza persistencia de sesión y reinicio automático.
+
+### 1. Iniciar el contenedor
+Asegúrate de haber configurado tu archivo `.env` correctamente, y luego ejecuta:
+
+```bash
+docker-compose up -d --build
+```
+
+### 2. Escanear el QR (Primera vez)
+Revisa los logs del contenedor para ver el código QR:
+```bash
+docker logs -f whatsapp_ai_bot
+```
+*(Presiona `Ctrl+C` para salir de los logs una vez escaneado).*
+
+El volumen persistente (`./auth_info_baileys`) evitará que tengas que volver a escanear el QR si el contenedor se reinicia.
+
+---
+
+## 🕹️ Comandos Predefinidos (Prioridad Alta)
+
+El sistema intercepta estos comandos antes de llamar a la IA para ahorrar tokens y tiempo:
+
+| Comando | Acción |
 |---|---|
-| `hola` / `inicio` | Saludo de bienvenida |
-| `ayuda` | Instrucciones de uso |
-| `humano` | Notifica que quiere hablar con una persona |
-| `reset` | Reinicia la conversación |
-
----
-
-## Estructura del Proyecto
-
-```
-whatsapp-ai-bot/
-├── src/
-│   ├── index.ts              # Punto de entrada
-│   ├── bot/
-│   │   └── whatsapp.ts       # Conexión WhatsApp (Baileys)
-│   ├── ai/
-│   │   └── groq.ts           # Integración Groq AI
-│   ├── handlers/
-│   │   ├── messageHandler.ts # Lógica de mensajes
-│   │   └── memory.ts         # Historial de conversaciones
-│   └── db/
-│       ├── index.ts          # Conexión SQLite
-│       └── schema.ts         # Esquema Drizzle ORM
-├── .env.example
-├── .gitignore
-├── package.json
-└── tsconfig.json
-```
-
----
-
-## Casos de Uso
-
-- 🏪 **Tiendas** — consulta de productos, precios y disponibilidad
-- 💈 **Barberías / Salones** — información de servicios y reservas
-- 🏥 **Consultorios** — horarios de atención y citas
-- 🍕 **Restaurantes** — menú, horarios y pedidos
-- 🏢 **Empresas** — soporte de primer nivel antes de escalar a un humano
-
----
-
-## Roadmap
-
-- [ ] Panel web de administración
-- [ ] Soporte para imágenes y documentos
-- [ ] Sistema de citas integrado
-- [ ] Deployment con Docker
-- [ ] Multi-idioma
+| `hola` / `inicio` | Envía mensaje de bienvenida instantáneo |
+| `ayuda` | Despliega opciones y menú principal |
+| `precio` | Muestra formulario/información de cotización |
+| `humano` | Pausa la IA y solicita intervención humana |
+| `reset` | Limpia el contexto actual del cliente |
 
 ---
 
 <div align="center">
-  <sub>Desarrollado por <a href="https://github.com/Nix0010">Nix0010</a> · Node.js + TypeScript + Groq AI</sub>
+  <sub>Construido con ❤️ por <a href="https://github.com/Nix0010">Nix0010</a> y potenciado por Arquitectura Multi-Agente</sub>
 </div>

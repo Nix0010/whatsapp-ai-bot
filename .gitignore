@@ -4,3 +4,5 @@ dist/
 auth_info_baileys/
 *.db
 *.db-journal
+*.db-shm
+*.db-wal

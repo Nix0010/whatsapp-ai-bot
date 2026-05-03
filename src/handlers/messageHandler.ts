@@ -18,45 +18,61 @@ const COMMANDS: Record<string, string> = {
 
 let messageCount = 0;
 
+/**
+ * Función auxiliar para verificar si el texto es un comando rápido
+ */
+function getCommandResponse(text: string): string | null {
+  const commandText = text.trim().toLowerCase();
+  return COMMANDS[commandText] || null;
+}
+
 export async function handleMessage(
   phoneNumber: string,
   pushName: string | undefined,
   text: string
 ): Promise<string> {
-  const normalizedText = text.trim().toLowerCase();
+  const normalizedText = text.trim();
 
-  // Registrar usuario
-  await upsertUser(phoneNumber, pushName);
+  try {
+    // 1. Registro inicial y limpieza en paralelo (No bloqueante si falla uno)
+    messageCount++;
+    await Promise.allSettled([
+      upsertUser(phoneNumber, pushName),
+      messageCount % 50 === 0 ? cleanOldMessages() : Promise.resolve(),
+    ]);
 
-  // Limpiar mensajes viejos cada 50 mensajes
-  messageCount++;
-  if (messageCount % 50 === 0) {
-    await cleanOldMessages();
-  }
-
-  // Verificar comandos especiales
-  if (COMMANDS[normalizedText]) {
-    const response = COMMANDS[normalizedText]!;
-    // Guardar en historial (excepto reset)
-    if (normalizedText !== "reset") {
-      await saveMessage(phoneNumber, "user", text);
-      await saveMessage(phoneNumber, "assistant", response);
+    // 2. Comandos rápidos (Prioridad alta)
+    const commandResponse = getCommandResponse(normalizedText);
+    if (commandResponse) {
+      if (normalizedText.toLowerCase() !== "reset") {
+        // Guardado no bloqueante
+        Promise.allSettled([
+          saveMessage(phoneNumber, "user", text),
+          saveMessage(phoneNumber, "assistant", commandResponse)
+        ]).catch(console.error);
+      }
+      return commandResponse;
     }
-    return response;
+
+    // 3. Validación de texto vacío/corto
+    if (normalizedText.length < 2) {
+      return "¿Puedes escribirme un poco más? 😊";
+    }
+
+    // 4. Invocación de IA con historial
+    const history = await getHistory(phoneNumber);
+    const aiResponse = await getAIResponse(text, history);
+
+    // 5. Guardado en memoria en background (mejora latencia)
+    Promise.allSettled([
+      saveMessage(phoneNumber, "user", text),
+      saveMessage(phoneNumber, "assistant", aiResponse)
+    ]).catch((err) => console.error(`Error guardando historial para ${phoneNumber}:`, err));
+
+    return aiResponse;
+
+  } catch (error) {
+    console.error(`[Error en handleMessage] para ${phoneNumber}:`, error);
+    return "Ups 😅, tuve un pequeño problema procesando tu mensaje. ¿Podrías repetirlo?";
   }
-
-  // Ignorar mensajes muy cortos o vacíos
-  if (text.length < 2) {
-    return "¿Puedes escribirme un poco más? 😊";
-  }
-
-  // Obtener historial y generar respuesta con IA
-  const history = await getHistory(phoneNumber);
-  const aiResponse = await getAIResponse(text, history);
-
-  // Guardar en historial
-  await saveMessage(phoneNumber, "user", text);
-  await saveMessage(phoneNumber, "assistant", aiResponse);
-
-  return aiResponse;
 }
